@@ -2,9 +2,9 @@
 
 A GTK4 application that allows you to run a command multiple times with an incrementing variable.
 
-This project was developed by a lazy developer with the help of AI tools including ChatGPT, GitHub Copilot, and Cursor. It is a straightforward application consisting of a Python file for the GUI and a Bash script. I think it's a nice base application which can serve as a starting point for building more advanced automation tools or learning about GTK4 and Flatpak packaging.
-
 ![](screenshots/Screenshot_2025-06-02_08-10-26_window.png)
+
+This project was developed by a lazy developer with the help of AI tools including ChatGPT, GitHub Copilot, and Cursor. It is a straightforward application consisting of a Python file for the GUI and a Bash script. I think it's a nice base application which can serve as a starting point for building more advanced automation tools or learning about GTK4 and Flatpak packaging.
 
 ## Building and Installing with Flatpak
 
