@@ -1,0 +1,30 @@
+{
+    "app-id": "com.example.RunNTimes",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "48",
+    "sdk": "org.gnome.Sdk",
+    "command": "run-n-times-gtk",
+    "finish-args": [
+        "--share=ipc",
+        "--socket=x11",
+        "--socket=wayland"
+    ],
+    "modules": [
+        {
+            "name": "run-n-times",
+            "buildsystem": "simple",
+            "build-commands": [
+                "install -Dm755 run-n-times-gtk /app/bin/run-n-times-gtk",
+                "install -Dm755 run-n-times /app/bin/run-n-times",
+                "install -Dm644 run-n-times.png /app/share/icons/hicolor/256x256/apps/com.example.RunNTimes.png",
+                "install -Dm644 run-n-times.desktop /app/share/applications/com.example.RunNTimes.desktop"
+            ],
+            "sources": [
+                {
+                    "type": "dir",
+                    "path": "."
+                }
+            ]
+        }
+    ]
+} 

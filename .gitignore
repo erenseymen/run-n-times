@@ -1,0 +1,23 @@
+# Flatpak build artifacts
+*.flatpak
+*.flatpakref
+*.flatpakrepo
+*.flatpak-builder
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Editor/OS files
+*~
+.DS_Store
+*.swp
+*.swo
+
+# Backup files
+*.bak
+*.tmp
+
+# Logs
+*.log

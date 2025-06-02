@@ -1,0 +1,22 @@
+[Desktop Entry]
+Type=Application
+Icon=com.example.RunNTimes
+Name=Run N Times
+Name[en]=Run N Times
+Name[en_US]=Run N Times
+Name[en_US.UTF-8]=Run N Times
+Exec=run-n-times-gtk
+Hidden=false
+NoDisplay=false
+StartupNotify=false
+Terminal=false
+Keywords=command
+Keywords[en]=command
+Keywords[en_US]=command
+Keywords[en_US.UTF-8]=command
+Comment=Run a command multiple times with incrementing variable
+Comment[en]=Run a command multiple times with incrementing variable
+Comment[en_US]=Run a command multiple times with incrementing variable
+Comment[en_US.UTF-8]=Run a command multiple times with incrementing variable
+Categories=Utility;
+

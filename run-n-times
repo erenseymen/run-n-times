@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# Default increment value
+MY_INCREMENT=1
+
+# Function to display usage information
+usage() {
+  echo "Usage: run-n-times -n <number_of_times> [-i <initial_value>] -- <command_to_run>"
+  echo ""
+  echo "  -n <number_of_times>   Number of times to run the command (required)"
+  echo "  -i <initial_value>     Initial value for MY_INCREMENT (default: 1, supports leading zeros)"
+  echo "  -- <command_to_run>    Command to execute, with optional arguments"
+  echo ""
+  echo "Examples:"
+  echo ""
+  echo "run-n-times -n 5 -- bash -c 'echo \"Hello world: \$MY_INCREMENT\"'"
+  echo "run-n-times -n 5 -i 001 -- bash -c 'echo \"Hello world: \$MY_INCREMENT\"'"
+  echo ""
+  exit 0
+}
+
+# Parse options
+while getopts ":n:i:" opt; do
+  case $opt in
+    n)
+      N=$OPTARG
+      ;;
+    i)
+      MY_INCREMENT=$OPTARG
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      usage
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      usage
+      ;;
+  esac
+done
+
+# Shift parsed options
+shift $((OPTIND -1))
+
+# Check for required arguments
+if [ -z "$N" ] || [ $# -eq 0 ]; then
+  usage
+fi
+
+# Extract the command to run
+COMMAND=("$@")
+
+# Determine padding width for MY_INCREMENT
+PAD_WIDTH=${#MY_INCREMENT}
+
+# Export MY_INCREMENT for child processes
+export MY_INCREMENT
+
+# Execute the command N times
+for ((i=1; i<=N; i++)); do
+  # Run the command with current MY_INCREMENT
+  "${COMMAND[@]}"
+  if [ $? -ne 0 ]; then
+    echo "Command failed on increment #$MY_INCREMENT. Exiting."
+    exit 1
+  fi
+  # Increment MY_INCREMENT with zero-padding
+  MY_INCREMENT=$(printf "%0${PAD_WIDTH}d" $((10#$MY_INCREMENT + 1)))
+done

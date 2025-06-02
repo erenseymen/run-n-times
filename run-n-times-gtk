@@ -1,0 +1,119 @@
+#!/usr/bin/env python3
+import gi
+import subprocess
+import sys
+
+gi.require_version('Gtk', '4.0')
+from gi.repository import Gtk, GLib
+
+class RunNTimesWindow(Gtk.ApplicationWindow):
+    def __init__(self, app, bash_path):
+        super().__init__(application=app)
+        self.set_title('Run N Times')
+        self.set_default_size(600, 320)
+        self.set_resizable(True)
+        self.bash_path = bash_path
+
+        grid = Gtk.Grid(column_spacing=12, row_spacing=12, margin_top=18, margin_bottom=18, margin_start=18, margin_end=18)
+        self.set_child(grid)
+
+        # Command
+        lbl_cmd = Gtk.Label(label='Command:', halign=Gtk.Align.END)
+        self.entry_cmd = Gtk.Entry(hexpand=True)
+        self.entry_cmd.set_placeholder_text('echo Hello world: $MY_INCREMENT')
+        grid.attach(lbl_cmd, 0, 0, 1, 1)
+        grid.attach(self.entry_cmd, 1, 0, 2, 1)
+
+        # Number of times
+        lbl_n = Gtk.Label(label='Number of times:', halign=Gtk.Align.END)
+        self.entry_n = Gtk.Entry()
+        self.entry_n.set_text('5')
+        grid.attach(lbl_n, 0, 1, 1, 1)
+        grid.attach(self.entry_n, 1, 1, 2, 1)
+
+        # Initial value
+        lbl_i = Gtk.Label(label='Initial value:', halign=Gtk.Align.END)
+        self.entry_i = Gtk.Entry()
+        self.entry_i.set_text('1')
+        grid.attach(lbl_i, 0, 2, 1, 1)
+        grid.attach(self.entry_i, 1, 2, 2, 1)
+
+        # Output (in a scrolled window, no max height)
+        scrolled = Gtk.ScrolledWindow(vexpand=True)
+        scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        # Removed set_max_content_height to allow full expansion
+        self.output = Gtk.TextView(editable=False, monospace=True, vexpand=True)
+        self.output_buf = self.output.get_buffer()
+        scrolled.set_child(self.output)
+        grid.attach(scrolled, 0, 3, 3, 1)
+
+        # Run button
+        self.btn_run = Gtk.Button(label='Run')
+        self.btn_run.connect('clicked', self.on_run)
+        grid.attach(self.btn_run, 2, 4, 1, 1)
+
+        # Focus command entry on startup
+        self.set_focus(self.entry_cmd)
+        self.entry_cmd.grab_focus()
+        self.entry_cmd.connect('activate', self.on_run)
+        self.entry_n.connect('activate', self.on_run)
+        self.entry_i.connect('activate', self.on_run)
+
+    def on_run(self, *args):
+        cmd = self.entry_cmd.get_text().strip()
+        n = self.entry_n.get_text().strip()
+        i = self.entry_i.get_text().strip()
+        if not cmd:
+            self.show_error('Command is required.')
+            self.set_focus(self.entry_cmd)
+            return
+        if not n.isdigit() or int(n) < 1:
+            self.show_error('Number of times must be a positive integer.')
+            self.set_focus(self.entry_n)
+            return
+        if not i.isdigit() or int(i) < 1:
+            self.show_error('Initial value must be a positive integer (leading zeros allowed).')
+            self.set_focus(self.entry_i)
+            return
+        self.btn_run.set_sensitive(False)
+        self.output_buf.set_text('')
+        GLib.idle_add(self.run_command, cmd, n, i)
+
+    def run_command(self, cmd, n, i):
+        args = [self.bash_path, '-n', n, '-i', i, '--', 'bash', '-c', cmd]
+        try:
+            proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            for line in proc.stdout:
+                GLib.idle_add(self.append_output, line)
+            proc.wait()
+            if proc.returncode == 0:
+                GLib.idle_add(self.append_output, '\nDone.')
+            else:
+                GLib.idle_add(self.append_output, f'\nError: Command failed (exit code {proc.returncode})')
+        except Exception as e:
+            GLib.idle_add(self.append_output, f'\nError: {e}')
+        finally:
+            GLib.idle_add(self.btn_run.set_sensitive, True)
+        return False
+
+    def append_output(self, text):
+        end = self.output_buf.get_end_iter()
+        self.output_buf.insert(end, text)
+
+    def show_error(self, msg):
+        dialog = Gtk.AlertDialog.new(self, Gtk.AlertDialogFlags.MODAL, Gtk.AlertDialogLevel.ERROR, msg)
+        dialog.show()
+
+class RunNTimesApp(Gtk.Application):
+    def __init__(self, bash_path):
+        super().__init__(application_id='com.example.RunNTimes')
+        self.bash_path = bash_path
+
+    def do_activate(self):
+        win = RunNTimesWindow(self, self.bash_path)
+        win.present()
+
+if __name__ == '__main__':
+    bash_path = sys.argv[1] if len(sys.argv) > 1 else 'run-n-times'
+    app = RunNTimesApp(bash_path)
+    app.run()
