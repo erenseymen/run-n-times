@@ -2,6 +2,10 @@
 
 A GTK4 application that allows you to run a command multiple times with an incrementing variable.
 
+This project was developed by a lazy developer with the help of AI tools including ChatGPT, GitHub Copilot, and Cursor. It is a straightforward application consisting of a Python file for the GUI and a Bash script. I think it's a nice base application which can serve as a starting point for building more advanced automation tools or learning about GTK4 and Flatpak packaging.
+
+![](screenshots/Screenshot_2025-06-02_08-10-26_window.png)
+
 ## Building and Installing with Flatpak
 
 ### Prerequisites
@@ -45,5 +49,3 @@ flatpak run com.example.RunNTimes
 ## Development
 
 The application is built using GTK4 and is designed to be simple and efficient. The main executables are for the gui [run-n-times-gtk](run-n-times-gtk) and for basic functionality and shell usage [run-n-times](run-n-times).
-
-This project was developed by a lazy developer with the help of AI tools including ChatGPT, GitHub Copilot, and Cursor. It is a straightforward application consisting of a Python file for the GUI and a Bash script. I think it's a nice base application which can serve as a starting point for building more advanced automation tools or learning about GTK4 and Flatpak packaging.
