@@ -20,7 +20,7 @@ class RunNTimesWindow(Gtk.ApplicationWindow):
         # Command
         lbl_cmd = Gtk.Label(label='Command:', halign=Gtk.Align.END)
         self.entry_cmd = Gtk.Entry(hexpand=True)
-        self.entry_cmd.set_placeholder_text('echo Hello world: $MY_INCREMENT')
+        self.entry_cmd.set_placeholder_text('echo Hello world: $i')
         grid.attach(lbl_cmd, 0, 0, 1, 1)
         grid.attach(self.entry_cmd, 1, 0, 2, 1)
 
