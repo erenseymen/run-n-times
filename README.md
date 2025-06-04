@@ -1,5 +1,9 @@
 # Run N Times
 
+<p align="center">
+  <img src="run-n-times.png" alt="Run N Times Icon" width="128" height="128">
+</p>
+
 A GTK4 application that allows you to run a command multiple times with an incrementing variable.
 
 ![](screenshots/Screenshot_2025-06-04_07-49-53_window.png)
