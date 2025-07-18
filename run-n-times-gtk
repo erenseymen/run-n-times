@@ -14,6 +14,13 @@ class RunNTimesWindow(Gtk.ApplicationWindow):
         self.set_resizable(True)
         self.bash_path = bash_path
 
+        # HeaderBar with Run button
+        header = Gtk.HeaderBar()
+        self.set_titlebar(header)
+        self.btn_run = Gtk.Button(label='Run')
+        self.btn_run.connect('clicked', self.on_run)
+        header.pack_start(self.btn_run)
+
         grid = Gtk.Grid(column_spacing=12, row_spacing=12, margin_top=18, margin_bottom=18, margin_start=18, margin_end=18)
         self.set_child(grid)
 
@@ -41,16 +48,10 @@ class RunNTimesWindow(Gtk.ApplicationWindow):
         # Output (in a scrolled window, no max height)
         scrolled = Gtk.ScrolledWindow(vexpand=True)
         scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        # Removed set_max_content_height to allow full expansion
         self.output = Gtk.TextView(editable=False, monospace=True, vexpand=True)
         self.output_buf = self.output.get_buffer()
         scrolled.set_child(self.output)
         grid.attach(scrolled, 0, 3, 3, 1)
-
-        # Run button
-        self.btn_run = Gtk.Button(label='Run')
-        self.btn_run.connect('clicked', self.on_run)
-        grid.attach(self.btn_run, 2, 4, 1, 1)
 
         # Focus command entry on startup
         self.set_focus(self.entry_cmd)
